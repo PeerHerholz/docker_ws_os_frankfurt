@@ -14,9 +14,9 @@ The *optimistic* schedule for the workshop looks as follows:
 10:00 - 10:30 installation & trouble shooting </br>
 10:30 - 11:30 Docker quickstart </br>
 11:30 - 12:00 Docker management </br>
-</br>
+
 12:00 - 13:00 Lunch
-</br>
+
 13:00 - 14:00 creating docker images </br>
 14:30 - 15:00 Docker & data </br>
 15:00 - 16:00 automating docker commands </br>
