@@ -172,7 +172,7 @@ class: center, middle, inverse
 ---
 # Docker quickstart
 ## a super fast introduction to docker
-### ~30min
+### ~45min
 
 
 ---
@@ -232,6 +232,22 @@ layout: false
 
 ---
 
+### <span style="color:purple">Docker commands 101</span>
+
+
+- ### there's a lot one can do with docker:
+
+<img src="images/docker_101_1.png" width="105%" />
+
+
+---
+
+### <span style="color:purple">Docker commands 101</span>
+
+<img src="images/docker_101_2.png" width="90%" />
+
+---
+
 ###<span style="color:purple">Is it working?</span>
 --
 
@@ -245,17 +261,234 @@ layout: false
 
 <img src="images/hello_world_test.png" width="105%" />
 
+---
 
+###<span style="color:purple">What is happening?</span>
+
+
+#### the command:
+  ```bash
+  docker run hello-world
+  ```
+
+- tells docker to *run* or *execute* the *container* or *image* `hello-world`
+
+- if the wanted container is not already on your machine, `docker` automatically
+   searches for and downloads it
+
+- `docker run` then *runs* or *executes* the given container doing whatever the
+   container is supposed to do
+
+<img src="images/hello_world_test.png" width="80%" />
 
 ---
 
-name: inverse
-layout: true
-class: center, middle, inverse
+###<span style="color:purple">Where do *docker containers* come from ?</span>
+
+--
+
+- in most cases, *docker containers* are stored online on and downloaded from
+  [*docker hub*](https://hub.docker.com/), an amazing and huge online repository
+
+- on [*docker hub*](https://hub.docker.com/) folks can upload and store as many
+  *docker containers* as they want for free, only requirement: a *docker id*
+
+<img src="images/docker_hub_example.png" width="60%" />
+
 ---
-# Exercises
+
+###<span style="color:purple">Where do *docker containers* come from ?</span>
+
+- once *build* and *tagged*, *docker images* can be pushed to [*docker hub*](https://hub.docker.com/)
+  via command line:
+
+  ```bash
+  docker push your-cool-image
+  ```
+  or  [*automatically build* from a *github repository*](https://docs.docker.com/docker-hub/builds/)
+  after pushing commits to a respecitve repo (*note*: both methods will be covered during the afternoon sessions)
+
+  <img src=https://docs.docker.com/docker-hub/builds/images/index-dashboard.png width="70%" />
+
 ---
-layout: false
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- now let's further explore *docker commands* within a typical workflow
+
+- at first, we want to download a certain *docker container* to work with, for
+  the sake of simplicity and time we're going to use the classic *ubuntu container*
+
+- instead of automatically downloading the container via *docker run*, we use the respective
+   *docker command* `docker pull image name`, hence
+
+   ```bash
+   docker pull ubuntu
+   ```
+
+   <img src="images/docker_pull_example.png" width="80%" />
+
+---
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- as you can see, we downloaded all layers that are needed to build
+  the classic *ubuntu docker container*, with the message `Status: Downloaded newer image for ubuntu:latest`
+  showing you that everything worked
+
+- **super important** : by default, `docker pull` always searches and downloads the container that is tagged
+  with `latest`, hence if you want to have a certain version (e.g., an older release or developer) it is necessary
+  to indicate the respective tag:
+
+   ```bash
+   docker pull ubuntu:version
+   ```
+   <img src="images/docker_pull_example.png" width="70%" />
+
+---
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- now we want to work with our newly downloaded *docker container*,
+so we decide to `run` or `execute` it via:
+```bash
+docker run ubuntu
+```
+<img src="images/docker_run_ubuntu_example.png" width="70%" />
+
+--
+
+- docker used `run`, nothing happend (Pokémon pun): all the fuzz for that?
+
+--
+
+- each *docker container* is build for reason and purpose, hence what happens when you `run`
+a given *docker container* depends (more or less) exclusively on its setup and definition
+
+--
+
+- the *docker container* we're currently using has no defined magic, that is functionality that automatically
+starts when running (*note*: more on that during the afternoon sessions)
+
+--
+
+- it is therefore super important to consult the `readme` or `docs` of a given *docker container* before using it
+
+---
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- *automated functionality* poses as one major approach to use docker images (e.g., within pipelines and workflows)
+
+  ```bash
+  docker run ubuntu echo "hello from your container"
+  ```
+
+ <img src="images/docker_run_ubuntu_example_2.png" width="70%" />
+
+
+--
+
+- however, the other one utilizes a given *docker container* within a *interactive fashion* which
+can be achieved through by including the `--it` flag within the `docker run command`:
+```bash
+docker run -it ubuntu bash
+```
+- here, we also tell the *ubuntu docker container* to start/enter the *bash shell*
+
+- now inside the *ubuntu docker container* we can utilize the functionality from the ubuntu OS and exit
+the *container* by typing *exit*
+
+ <img src="images/docker_run_ubuntu_example_3.png" width="70%" />
+
+---
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- depending on a given container's architecture and definition, it should remove itself from *running instances*
+when exiting, however to be sure it's worth to ensure that and check *running instances* when you notice e.g., a
+drop in perfomance (*note*: more on docker management in the next session)
+
+- this can easily be done by
+```bash
+docker ps
+```
+ <img src="images/docker_ps_example.png" width="100%" />
+
+
+--
+
+- in order to ensure that a given *docker container* is removed from *running instances* after exiting,
+the `--rm` flag can be included in the `docker run` command:
+```bash
+docker run -it --rm ubuntu bash
+```
+
+---
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- when working within a *docker container*, creating, modifying and deleting files, changes
+are neither permanent nor saved, as this is against the *encapsulation* and *reproducibility* idea:
+
+<img src="images/docker_mount_example_1.png" width="100%" />
+
+--
+
+- furthermore, we cannot interact with data stored on our host or somewhere outside the *docker container*
+
+--
+
+- in order to address both problems, we need to `mount` paths
+
+---
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- `mounting` describes a mapping from *paths outside the docker container* to
+*paths inside the docker container*
+
+- it is achieved through the `-v` flag within the `docker run` command and utilized as follows:
+`-v path/outside/container:/path/inside/container`
+
+- for example, let's make `/Desktop` available *inside the docker container* as `/data`:
+```bash
+docker run -it --rm -v /Users/peerherholz/Desktop:/data ubuntu bash
+```
+<img src="images/docker_mount_example_2.png" width="100%" />
+
+---
+
+### <span style="color:purple">Docker commands 101 - in depth</span>
+
+
+- you can also restrict the rights of mounted paths to e.g. *read only* in case
+any modification should be prevented (for example within automated functionality):
+```bash
+docker run -it --rm -v /Users/peerherholz/Desktop:/data:ro ubuntu bash
+```
+<img src="images/docker_mount_example_3.png" width="100%" />
+
+--
+
+- most of the time, it's a good idea to indicate absolute paths on the host system
+
+--
+
+- in our example the directory `/data` didn't exist before mounting it, hence it was
+created automatically, however this is also depends on the *docker cotnainer* and it's
+setup/definition at hand as e.g. within automated functionality a certain `directory` is expected
+
+- as usual: check the *readme* and/or *docs* of a given *docker container*
+
+---
+
 
 ### <span style="color:purple">Docker: Using existing images</span>
 
@@ -337,40 +570,7 @@ layout: false
   ```
 
 ---
-### <span style="color:purple">Docker: Installing software with Dockerfile</span>
 
-- Create a new directory
-
-  ```bash
-  mkdir mydockerbuild
-  cd mydockerbuild
-  ```
-
-- Dockerfile content:
-
-  ```bash
-  FROM ubuntu:latest
-  RUN apt-get update -y && apt-get install git emacs
-  ```
-
-- Building a new container:
-
-  ```bash
-  docker build -t my_new_container .
-  ```
-
-- Running your new container:
-
-  ```bash
-  docker run -it --rm my_new_container
-  ```
-
-- Within container you can try:
-  ```bash
-  git
-  emacs
-  ```
----
 ### <span style="color:purple">Docker: Installing software with Dockerfile</span>
 
 - More about the Dockerfile syntax you can find [here](https://docs.docker.com/engine/reference/builder/#from)
@@ -378,142 +578,6 @@ layout: false
 - Example of Dockerfile to run Nipype workflow from [Docker Hub](https://hub.docker.com/r/miykael/nipype_tutorial/~/dockerfile/)
 
 - Generate custom Docker image for your neuroimaging environment with [Neurodocker](https://github.com/kaczmarj/neurodocker)
-
----
-### <span style="color:purple">Docker and this workshop</span>
-
-- Using Docker image for this workshop
-
-  ```bash
-  # Check which docker images you already have
-  docker images
-
-  # Download the latest version of the docker image for the workshop
-  docker pull miykael/workshop_marburg:latest
-
-  # Open the workshop container with bash or ipython
-  docker run -it --rm miykael/workshop_marburg:latest bash
-  docker run -it --rm miykael/workshop_marburg:latest ipython
-  ```
-
-- Within the workshop container you have a fully working ubuntu with all the essential software necessary for this workshop.
-
-  ```bash
-  # Running Python
-  ipython -c "import nipype; print(nipype.__version__)"
-
-  # Running FSL
-  fslinfo /data/ds*/sub-01/ses-test/func/*fingerfootlips_bold.nii.gz
-
-  # Starting Jupyter Notebook
-  jupyter notebook
-  ```
----
-
-### <span style="color:purple">Docker and this workshop</span>
-
-- Using Jupyter notebook with Docker container `-p` option: publishing ports
-  ```bash
-  # You can use various host port number (just change '9999')
-  docker run -it --rm -p 9999:8888 \
-      miykael/workshop_marburg:latest jupyter notebook
-  ```
-
---
-
-- Run a docker image on Windows (more tricky than on Linux or Mac OS X)
-  ```bash
-  # 1. Open Docker terminal and check your IP adress in docker machine
-  docker-machine ip
-  >>> 192.168.99.100
-
-  # 2. Create folders you want to use within the container
-  mkdir -p /c/Users/username/output
-
-  # 3. Open docker container for this workshop
-  docker run -it --rm -v /c/Users/username/path/to/output/:/output \
-      -p 9999:8888 djarecka/nipype_tutorial
-
-  # 4a. To open the notebook URL, replace 'localhost' with your IP
-  http://localhost:8888/?token=0312c1ef3b61...``
-  http://192.168.99.100:8888/?token=0312c1ef3b61...``
-
-  # 4b. If the URL contains '0.0.0.0' replace them with 'localhost'
-  http://0.0.0.0:8888/?token=0312c1ef3b61...``
-  http://localhost:8888/?token=0312c1ef3b61...``
-  ```
-
----
-### <span style="color:purple">Docker and Singularity</span>
-
-#### Docker:
-
-  - docker can escalate privileges, so you can be effectively treated as a root on the host system
-  - this is usually  not supported by administrators from HPC centers
-
---
-
-#### Singularity:
-  - a container solution created for scientific and application driven workloads
-  - supports existing and traditional HPC resources
-  - a user inside a Singularity container is the same user as outside the container
-  - but you can use Vagrant to create a container (you have root privileges on your VM!)
-  - can run (and modify!) existing Docker containers
-  ```bash
-  sudo singularity shell --writable <repository>
-  ```
-  - running VM is required on OSX
-  - [Satra's presentation](http://satra.cogitatum.org/om-images/)
-  - [other tutorials](http://singularity.lbl.gov/tutorials)
-
----
-### <span style="color:purple">Conda - Docker alternative for Python</span>
-
-#### Virtual environments
-
-  - keep the dependencies required by different projects in separate places
-
-  - allows to work with specific versions of libraries or Python itself without affecting other Python projects
-
-#### [Conda](https://conda.io/docs/)
-
-  - A package manager and an environment manager
-
-  - `conda` is quickest installed with [Miniconda](https://conda.io/miniconda.html). Miniconda installes only the most basic python packages.
-
-  - If you want a conda environment with many usefull packages already preinstalled, we recommend to download [Anaconda](https://www.anaconda.com/download).
-
----
-### <span style="color:purple">How to use conda</span>
-
-  ```bash
-  # Updating conda
-  conda update conda
-
-  # List available Python version
-  conda search "^python$"
-
-  # Creating a Python 3.6 environment
-  conda create -n python3.6_test python=3.6
-
-  # Install directly some packages while creating a new environment
-  conda create -n python3.6_anaconda python=3.6 anaconda
-
-  # Installing additional packages
-  conda install -n python3.6_test scipy
-
-  # Remove unused packages and caches
-  conda clean -tipsy
-
-  # Activating the environment
-  source activate python3.6_test
-
-  # Deactivating the environment
-  source deactivate python3.6_test
-
-  # Remove conda environment
-  conda remove --name python3.6_test --all
-  ```
 
 ---
 
