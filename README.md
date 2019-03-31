@@ -17,7 +17,7 @@ The *optimistic* schedule for the workshop looks as follows:
 
 12:00 - 13:00 Lunch
 
-13:00 - 13:30 Docker management
+13:00 - 13:30 Docker management </br>
 13:30 - 14:30 creating docker images </br>
 14:30 - 15:15 Docker & data </br>
 15:15 - 16:00 automating docker commands </br>
