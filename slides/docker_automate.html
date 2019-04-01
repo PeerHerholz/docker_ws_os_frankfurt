@@ -220,24 +220,113 @@ layout: false
 
 &nbsp;
 
-- ### so far, we (hopefully) got to know how *docker* works, how *containers* can be downloaded, used and managed, as well as they can be `build` and `pushed`
+- ### so far, we (hopefully) got to know how *docker* works, how *containers* can be downloaded, used and managed, `build` and `pushed`, as well as equipped with data
 
 &nbsp;
 --
 
-- ### IMHO, these are the essentials you have to be familiar with when starting to work with *docker*
+- ### however, we're missing one super cool part: the automatization of functionality
 
 --
 
-- ### however, docker is of course way more complex and there is an shear endless amount of more specific and advanced stuff we should talk about
+- ### *Docker containers' can be setup and configured to do a certain task upon starting / running
 
 --
 
-- ### one of those topics is how to get data into our *Docker containers*
+- ### these automatized *commands* can nearly be everything you want, from simple to incredibly complex tasks
 
 ---
 
 ### <span style="color:purple">Docker automatization</span>
+
+- if you remember all the way back in the `docker quickstart` lecture, we saw that our *ubuntu container* did simply nothing after starting, because it wasn't tasked to do so
+```bash
+docker run ubuntu
+```
+<img src="images/docker_run_ubuntu_example.png" width="70%" />
+
+--
+
+- when providing a task, the respective function was executed
+```bash
+docker run ubuntu echo "hello from your container"
+```
+<img src="images/docker_run_ubuntu_example_2.png" width="70%" />
+---
+### <span style="color:purple">Docker automatization</span>
+
+- we can observe the same behavior in our *Docker container*
+
+- upon starting/running, we enter the shell and that's it
+<img src="images/docker_automate_example.png" width="100%" />
+
+--
+
+- if we now set a task within our `docker run` *command* the respective task is executed, for example `ls`
+```bash
+docker run -it --rm myfirstdocker ls
+```
+<img src="images/docker_automate_example_2.png" width="100%" />
+
+--
+
+- that's of course by no means automatization, so let's check how we can automatize for example the `ls` command, such that whenever we start/run our *Docker container* we get the respective output
+
+---
+### <span style="color:purple">Docker automatization</span>
+
+- by now you're probably tired of hearing this, but as everything else with *docker* automatization is achieved rather easy and straightforward
+
+--
+
+- all we need to do is to include the *function* or `command` we want to automatize in our *Dockerfile*
+
+--
+
+- this is done via the `CMD` command that should go at the end of our *Dockerfile*
+```bash
+CMD ["ls"]
+```
+
+--
+
+- we then, of course have to rebuild the *container*
+
+--
+
+- if starting/running the new *container*, we automatically run `ls` and get the output
+<img src="images/docker_automate_example_3.png" width="100%" />
+
+---
+### <span style="color:purple">Docker automatization</span>
+
+- while this is a toy example, it can be adapted to reflect a more prototypic *docker application*, that is the interaction between your *host system* and certain functionality inside a *docker container*
+
+--
+
+- let's image we don't want to `ls` "within" our *docker container* but on our host system through our *docker container*, we can simply combine what we know about *automatization* and *mounting paths*
+
+--
+
+- hence, we have to adapt our command to apply `ls` to a certain directory (e.g., input), with that directory being *mounted* during `docker run`
+
+- while we're at it, let's use the other option for `automatization`, that is adding our *command* to the `ENTRYPOINT`
+```bash
+ENTRYPOINT ["ls", "/input"]
+```
+
+
+---
+
+- ls input directory
+
+- jupyter notebook
+
+- small python scrip that adds input 1 and 2
+
+- nibls on example data
+
+- *awesome sidequest*: mybinder
 
 
 - from time to time, it might be advised or even necessary to provide some data that comes with your *Docker container*, e.g. for reproducible purposes, tutorials, etc.
@@ -250,6 +339,7 @@ layout: false
 
 - let's say we want to put a picture of whale into our *Docker container* because we're such *docker* fans and whales are nothing but awesome, we know that the state of a given *container* cannot be changed from the *path mounting* part of this workshop
 <img src="images/docker_data_example.png" width="100%" />
+---
 
 ---
 name: inverse

@@ -77,3 +77,9 @@ RUN curl --output /home/images/happy_whale_2.jpg  https://cdn.pixabay.com/photo/
 
 
 RUN bash -c 'source activate ApythonEnviromentAtTheEndOfTheUniverse && datalad install -r ///workshops/nih-2017/ds000114 && cd ds000114 && datalad get -J 4 sub-*/ses-test/anat'
+
+RUN bash -c 'mkdir /home/input'
+
+#CMD ["ls"]
+
+ENTRYPOINT ["ls", "/input"]
